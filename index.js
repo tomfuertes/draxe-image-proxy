@@ -35,9 +35,11 @@ proxy.on('proxyRes', function(proxyRes, req, res) {
   var dir = pathArray.join('/');
   // console.log('localPath:', localPath);
   // console.log('dir:', dir);
-  mkpath.sync(dir);
-  var writeStream = fs.createWriteStream(localPath);
-  proxyRes.pipe(writeStream);
+  if (proxyRes.statusCode === 200) {
+    mkpath.sync(dir);
+    var writeStream = fs.createWriteStream(localPath);
+    proxyRes.pipe(writeStream);
+  }
 });
 
 app.listen(app.get('port'), function() {
