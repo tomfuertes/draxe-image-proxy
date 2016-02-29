@@ -12,8 +12,11 @@ app.use(express.static(__dirname + '/public'));
 
 app.route('/nuke$').all(function(req, res) { // proxy all requests
   rimraf.sync(__dirname + '/public/s');
-  fs.unlinkSync('./public/favicon.ico');
-  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  var favicon = __dirname + '/public/favicon.ico';
+  if (fs.existsSync(favicon)) fs.unlinkSync(favicon);
+  res.writeHead(200, {
+    'Content-Type': 'text/plain'
+  });
   res.write('nuking...');
   res.end();
 });
@@ -25,7 +28,7 @@ app.route('/*$').all(function(req, res) { // proxy all requests
   }); //sandbox
 });
 
-proxy.on('proxyRes', function (proxyRes, req, res){
+proxy.on('proxyRes', function(proxyRes, req, res) {
   var localPath = __dirname + '/public' + req._parsedUrl.path;
   var pathArray = localPath.split('/');
   pathArray.pop(); // remove filename
