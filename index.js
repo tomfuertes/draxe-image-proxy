@@ -29,12 +29,12 @@ app.route('/*$').all(function(req, res) { // proxy all requests
 });
 
 proxy.on('proxyRes', function(proxyRes, req, res) {
-  var localPath = __dirname + '/public' + req._parsedUrl.path;
+  var localPath = __dirname + '/public' + req._parsedUrl.pathname;
   var pathArray = localPath.split('/');
   pathArray.pop(); // remove filename
   var dir = pathArray.join('/');
-  console.log('localPath:', localPath);
-  console.log('dir:', dir);
+  // console.log('localPath:', localPath);
+  // console.log('dir:', dir);
   mkpath.sync(dir);
   var writeStream = fs.createWriteStream(localPath);
   proxyRes.pipe(writeStream);
